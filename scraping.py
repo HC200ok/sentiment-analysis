@@ -2,6 +2,8 @@ import requests
 import random
 from bs4 import BeautifulSoup
 from urllib import parse
+from sentimentja import Analyzer
+analyzer = Analyzer()
 
 user_agents =  ['Mozilla/5.0 (Windows NT 6.1; rv:2.0.1) Gecko/20100101 Firefox/4.0.1','Mozilla/5.0 (Windows; U; Windows NT 6.1; en-us) AppleWebKit/534.50 (KHTML, like Gecko) Version/5.1 Safari/534.50','Opera/9.80 (Windows NT 6.1; U; en) Presto/2.8.131 Version/11.11']
 
@@ -21,7 +23,7 @@ def getSearchResIds(p):
   if len(results) == 0:
     return {}
 
-  result = results[9]
+  # result = results[9]
 
   a_list = []
 
@@ -63,7 +65,8 @@ def getCommentsUrl(id):
   keys = plugin['data-keys']
   full_page_url = plugin['data-full-page-url']
   # 数量
-  comment_num = plugin['data-comment-num']
+  # comment_num = plugin['data-comment-num']
+  comment_num = 50
   bkt = 'paid001'
   grp = plugin['data-grp']
   opttype = plugin['data-opttype']
@@ -73,18 +76,21 @@ def getCommentsUrl(id):
   return url
 
 def getComments(url):
-
   r = requests.get(url, headers = headers)
 
   content = r.text
 
   soup = BeautifulSoup(content, 'lxml')
 
+  number = soup.find(class_ = 'num').find('dd').get_text()
+
+  if number == '0':
+    return { 'number': '0', 'items': [] }
+
   list = soup.find(id = 'comment-list-item')
 
   lis = list.find_all(class_ = 'commentListItem')
 
-  number = soup.find(class_ = 'num').find('dd').get_text()
 
   items = []
 
@@ -93,24 +99,14 @@ def getComments(url):
     items.append(comment)
   return { 'number': number, 'items': items }
 
-def comments(p):
-  res = getSearchResIds(p)
-  for i, item in enumerate(res):
-    url = getCommentsUrl(item['id'])
-    if url == False:
-      res[i]["comment_num"] = 0
-      res[i]["comments"] = []
-    else:
-      comments = getComments(url)
-      res[i]["comment_num"] = comments['number']
-      res[i]["comments"] = comments['items']
+def comments(id):
+  url = getCommentsUrl(id)
+  res = {}
+  if url == False:
+    res["comment_num"] = 0
+    res["comments"] = []
+  else:
+    comments = getComments(url)
+    res["comment_num"] = comments['number']
+    res["comments"] = analyzer.analyze(comments['items'])
   return res
-
-# if __name__ == '__main__':
-  # print(comments('韓国 日本'))
-
-  # {
-  #   'article_name': '',
-  #   'comments_num': '',
-  #   'comments': [],
-  # }
