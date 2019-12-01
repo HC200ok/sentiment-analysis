@@ -7,7 +7,8 @@
 ## 実装の流れ：
 ### 1.  学習データを集める。
 
-<img width="650px" style="border: 1px soild #ccc" src="./sentiment_analysis/images/1.png">
+![avatar](/sentiment_analysis/images/1.png)
+
 
 ### 2. 学習データに正解ラベルラベルを付く。
 
