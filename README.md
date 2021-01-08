@@ -1,7 +1,7 @@
 # A CNN model to classify contents to 6 kinds of emotions
  Learned from [@sugiyamath](https://qiita.com/sugiyamath/items/7cabef39390c4a07e4d8)先生
 
-- Training/Validation data set: Tweets crawled from twiiter
+- Training/Validation data set: Tweets crawled from twitter
 - Test data set:  Comments of news post crawled from Yahoo!news
 
 ## 実装の流れ：
@@ -11,7 +11,7 @@
 <img width="650px" style="border: 1px soild #ccc" src="./sentiment_analysis/images/1.png">
 
 
-### 2. 学習データに正解ラベルラベルを付く。
+### 2. 学習データに正解ラベルを付く。
 
 
 <img width="650px" style="border: 1px soild #ccc" src="./sentiment_analysis/images/2.png">
